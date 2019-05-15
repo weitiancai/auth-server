@@ -60,8 +60,13 @@ public class LoginController {
     @RequestMapping(value="/admin/home", method = RequestMethod.GET)
     public ModelAndView home(){
         ModelAndView modelAndView = new ModelAndView();
+        // 此处 获取 认证用户信息
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = userService.findUserByEmail(auth.getName());
+        System.out.println("credentials:"+auth.getCredentials());
+        System.out.println("Authorities:"+auth.getAuthorities()); // 权力
+        System.out.println("Details:"+auth.getDetails());
+        System.out.println("Principal:"+auth.getPrincipal());
         modelAndView.addObject("userName", "Welcome " + user.getName() + " " + user.getLastName() + " (" + user.getEmail() + ")");
         modelAndView.addObject("adminMessage","Content Available Only for Users with Admin Role");
         modelAndView.setViewName("admin/home");
