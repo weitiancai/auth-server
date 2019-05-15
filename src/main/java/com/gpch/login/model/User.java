@@ -1,6 +1,6 @@
 package com.gpch.login.model;
 
-//import javax.scene.control.PopupControlBuilder;
+//import javafx.scene.control.PopupControlBuilder;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,7 +22,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "user_id")
-    private int id;
+    private Integer id;
     @Column(name = "email")
     @Email(message = "*Please provide a valid Email")
     @NotEmpty(message = "*Please provide an email")
@@ -74,14 +74,14 @@ public class User {
                 '}';
     }
 
-    public int getId() {
-        return id;
-    }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
+    public void setIdNull(){
+        this.id = null;
+    }
     public String getEmail() {
         return email;
     }

@@ -59,7 +59,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-
+        // Ant模式通配符匹配
         http.
                 authorizeRequests()
                 .antMatchers("/").permitAll()
