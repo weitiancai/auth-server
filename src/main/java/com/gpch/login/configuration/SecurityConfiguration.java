@@ -1,5 +1,7 @@
 package com.gpch.login.configuration;
 
+import com.gpch.login.service.CustomerUserDetailsService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -13,6 +15,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
@@ -23,6 +26,7 @@ import javax.sql.DataSource;
 @Configuration
 @Order(1)
 @EnableWebSecurity
+@EnableAuthorizationServer
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Value("${clientUrl}")
@@ -30,6 +34,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    @Bean
+    public BCryptPasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+
 
     @Autowired
     private DataSource dataSource;
@@ -46,6 +57,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         return super.authenticationManagerBean();
     }
 
+    @Bean
+    public UserDetailsService userDetailsService() {
+        return new CustomerUserDetailsService();
+    };
 //    @Autowired
 //    private AuthenticationManager authenticationManager;
 //    @Autowired
@@ -54,12 +69,17 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth)
             throws Exception {
+//        auth.userDetailsService(userDetailsService()).passwordEncoder(passwordEncoder());
+
         auth.
                 jdbcAuthentication()
                 .usersByUsernameQuery(usersQuery)
                 .authoritiesByUsernameQuery(rolesQuery)
                 .dataSource(dataSource)
                 .passwordEncoder(bCryptPasswordEncoder);
+
+
+
 //        auth.userDetailsService(getUserDetailsService()).passwordEncoder(bCryptPasswordEncoder);
 //        auth.parentAuthenticationManager(authenticationManager)
 //                .userDetailsService(customerUserDetailsService);

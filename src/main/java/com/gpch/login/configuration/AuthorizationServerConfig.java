@@ -21,11 +21,6 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     private String clientUrl;
 
     private TokenStore tokenStore;
-    @Bean
-    public BCryptPasswordEncoder passwordEncoder() {
-        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-        return bCryptPasswordEncoder;
-    }
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -44,7 +39,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
         clients
                 .inMemory()
                 .withClient("ClientId")
-                .secret(passwordEncoder().encode("secret"))
+                .secret(new BCryptPasswordEncoder().encode("secret"))
                 .authorizedGrantTypes("authorization_code")
                 .scopes("user_info")
                 .accessTokenValiditySeconds(1200)//Access token is only valid for 20 minutes.
